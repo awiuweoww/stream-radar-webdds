@@ -1,0 +1,43 @@
+services:
+  # 1. Custom Radar Gateway (Reliable Bridge)
+  radar-gateway:
+    build:
+      context: ./gateway-bridge
+    container_name: radar-gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - radar-net
+
+  # 2. Backend C++ Publisher
+  radar-be:
+    build:
+      context: ./be-stream-radar-cpp
+      dockerfile: Dockerfile
+    container_name: radar-be
+    depends_on:
+      - radar-gateway
+    networks:
+      - radar-net
+    restart: always
+
+  # 3. Frontend Dashboard
+  radar-fe:
+    build:
+      context: ./fe-stream-radar-webdds
+      dockerfile: Dockerfile
+    container_name: radar-fe-v2
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./fe-stream-radar-webdds:/app_build
+      - /app_build/node_modules # Lindungi node_modules kontainer agar tidak tertimpa lokal
+    environment:
+      - CACHE_BREAKER=2
+      - VITE_WEBDDS_URL=ws://localhost:8080/webdds
+    networks:
+      - radar-net
+
+networks:
+  radar-net:
+    driver: bridge
