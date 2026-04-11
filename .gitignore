@@ -32,3 +32,6 @@ be-stream-radar-cpp/obj/
 # Rspack / Webpack
 fe-stream-radar-webdds/dist/
 fe-stream-radar-webdds/.rspack/
+
+# Private Metadata
+.sixth/
