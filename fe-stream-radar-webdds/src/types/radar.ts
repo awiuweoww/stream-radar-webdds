@@ -9,6 +9,7 @@
  * Changelog:
  *   - 0.1.0 (11-04-2026): Kerangka awal struktur Latitude, Longitude, Heading, dan Speed (KTS).
  */
+
 export interface RadarTrack {
   trackId: string;
   lat: number;
@@ -18,18 +19,4 @@ export interface RadarTrack {
   altitude: number;
   timestamp: number;
   classification: 'UNKNOWN' | 'FRIEND' | 'HOSTILE' | 'NEUTRAL';
-}
-
-// Simulasi Data Generator untuk uji coba WebDDS Streaming
-export function generateMockTrack(id: string, initialLat: number, initialLon: number): RadarTrack {
-  return {
-    trackId: id,
-    lat: initialLat,
-    lon: initialLon,
-    speed: 300 + Math.random() * 200,
-    heading: Math.random() * 360,
-    altitude: 10000 + Math.random() * 20000,
-    timestamp: Date.now(),
-    classification: 'UNKNOWN',
-  };
 }

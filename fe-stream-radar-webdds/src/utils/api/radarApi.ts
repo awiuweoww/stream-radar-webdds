@@ -17,7 +17,7 @@ class RadarSubscriber {
 
   constructor() {
     try {
-      this.url = (process.env.VITE_WEBDDS_URL) || 'ws://localhost:8080/webdds';
+      this.url = (import.meta as any).env.VITE_WEBDDS_URL || 'ws://localhost:8080/webdds';
     } catch (e) {
       this.url = 'ws://localhost:8080/webdds';
     }
@@ -90,11 +90,26 @@ class RadarSubscriber {
     }
   }
 
-  public disconnect() {
+  /**
+   * Memutuskan hubungan soket secara manual dan mematikan rutinitas rekoneksi.
+   */
+  public disconnect(): void {
     if (this.socket) {
       this.socket.onclose = null; // Matikan auto-reconnect saat manual disconnect
       this.socket.close();
       this.socket = null;
+    }
+  }
+
+  /**
+   * Mengirim perubahan parameter jumlah target armada secara On-The-Fly.
+   * @param count - Angka desimal jumlah target yang diharapkan dari Gateway.
+   */
+  public updateTargetCount(count: number): void {
+    this.currentTargetCount = count;
+    if (this.socket?.readyState === WebSocket.OPEN) {
+      const cmd = JSON.stringify({ action: 'START', value: this.currentTargetCount });
+      this.socket.send(cmd);
     }
   }
 }

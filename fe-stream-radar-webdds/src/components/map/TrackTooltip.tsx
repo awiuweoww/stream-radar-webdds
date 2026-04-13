@@ -25,12 +25,11 @@ export const TrackTooltip = forwardRef<HTMLDivElement, TrackTooltipProps>(({ dat
     >
         {data && (
         <>
-            {/* ID Header */}
             <div className="font-bold border-b border-surface-700 pb-1.5 mb-2.5 text-cyan-400 capitalize tracking-wide flex items-center gap-2">
                 <div className={`w-2 h-2 rounded-full ${getClassificationTailwindClass(data.classification)}`} />
                 {data.trackId}
             </div>
-            {/* Data Listing */}
+            
             <div className="text-[11px] space-y-1.5 font-mono text-surface-200">
             <div className="flex justify-between gap-4">
                 <span className="text-surface-400">LAT</span> <span>{formatLatitude(data.lat)}</span>

@@ -10,8 +10,9 @@
  *   - 0.1.0 (11-04-2026): Penyesuaian palet neon (Cyan) dan sentralisasi token surface gelap.
  */
 /** @type {Record<string, string | Record<string, string>>} */
+
 module.exports = {
-	// Neutral background for dark military UI
+	
 	surface: {
 		50: "#f2f4f6",
 		100: "#d9dde3",
@@ -26,7 +27,7 @@ module.exports = {
 		950: "#0b1117",
 		DEFAULT: "#131c23"
 	},
-	// Status colors
+	
 	danger: "#ff4444",
 	success: "#00cc66",
 	cyan: {

@@ -11,6 +11,11 @@
  */
 import React from 'react';
 
+/**
+ * Komponen Header yang menampilkan navigasi utama dan identitas aplikasi.
+ * 
+ * @returns Elemen JSX Header.
+ */
 export const Header: React.FC = () => {
   return (
     <header className="flex items-center justify-between px-8 py-5 bg-white border-b border-surface-200">

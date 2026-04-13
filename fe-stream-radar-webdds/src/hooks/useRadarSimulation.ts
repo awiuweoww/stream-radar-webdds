@@ -81,6 +81,10 @@ export function useRadarSimulation(
   // 2. Data Connector (Real-time Link)
   useEffect(() => {
     if (isActive) {
+      /**
+       * Menerima pembaruan lintasan kapal/pesawat secara real-time dari Gateway.
+       * @param data - Kumpulan data mentah radar dari web socket.
+       */
       const dataHandler: RadarUpdateCallback = (data) => {
         livePoolRef.current = data;
       };
@@ -94,7 +98,14 @@ export function useRadarSimulation(
     return () => {
       radarApi.disconnect();
     };
-  }, [isActive, targetCount]);
+  }, [isActive]);
+
+  // 3. Listener Perubahan Parameter (Tanpa Restart Koneksi Utama)
+  useEffect(() => {
+    if (isActive) {
+      radarApi.updateTargetCount(targetCount);
+    }
+  }, [targetCount, isActive]);
 
   /**
    * Fungsi animasi utama (Loop).
@@ -122,6 +133,10 @@ export function useRadarSimulation(
 
     let lastTime = performance.now();
 
+    /**
+     * Loop rendering 60 FPS untuk sinkronisasi posisi fitur di OpenLayers.
+     * @param time - Waktu resolusi tinggi dari requestAnimationFrame.
+     */
     const animate = (time: number) => {
       const dt = time - lastTime;
       lastTime = time;

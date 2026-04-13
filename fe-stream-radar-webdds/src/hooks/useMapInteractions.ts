@@ -1,9 +1,8 @@
 /**
  * Created Date       : 11-04-2026
- * Description        : Hook Interaction Layer (Event Middleware).
- *                      Mengabstraksi logika 'Hit Detection' OpenLayers untuk deteksi fitur (kapal).
- *                      Mengelola state transien Tooltip/Popup, sinkronisasi posisi overlay terhadap
- *                      koordinat dinamis, serta manajemen state kursor untuk UX yang responsif.
+ * Description        : Hook untuk mengelola interaksi pada peta OpenLayers.
+ *                      Bertanggung jawab atas deteksi fitur (kapal), manajemen state transien Tooltip/Popup,
+ 
  */
 import { useEffect, useRef } from 'react';
 import Map from 'ol/Map';
@@ -13,6 +12,15 @@ import { RadarTrack } from '../types/radar';
 
 import { useSimulationStore } from '../store/useSimulationStore';
 
+/**
+ * Hook untuk mengelola interaksi pada peta OpenLayers.
+ * Bertanggung jawab atas deteksi fitur (kapal), manajemen state transien Tooltip/Popup,
+ * sinkronisasi posisi overlay terhadap koordinat dinamis, serta manajemen state kursor untuk UX yang responsif.
+ * 
+ * @param mapInstanceRef Referensi ke instance peta OpenLayers.
+ * @param overlayElement Referensi ke elemen overlay (tooltip/popup).
+ * @returns Objek yang berisi data popup, setter data popup, referensi ID track yang dipilih, dan referensi instance popup.
+ */
 export function useMapInteractions(
   mapInstanceRef: React.MutableRefObject<Map | null>, 
   overlayElement: React.RefObject<HTMLDivElement>

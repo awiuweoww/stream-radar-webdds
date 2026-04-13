@@ -54,7 +54,7 @@ export default defineConfig({
 	},
 	devServer: {
 		port: parseInt(getEnv("PORT", "3000")),
-		host: "0.0.0.0", // Sangat penting agar terekspos dari dalam Docker
+		host: "0.0.0.0",
 		hot: true,
 		static: {
 			directory: path.join(__dirname, "build")
@@ -70,7 +70,7 @@ export default defineConfig({
 	},
 	watchOptions: {
 		ignored: /node_modules/,
-		poll: 1000, // Penting di Windows/Docker agar event 'Save File' terbaca
+		poll: 1000, 
 		aggregateTimeout: 300,
 	},
 	module: {
@@ -116,7 +116,7 @@ export default defineConfig({
 			name: SERVICE_NAME.toLowerCase().replace(/-/g, "_"),
 			filename: "remoteEntry.js",
 			remotes: {},
-			exposes: { "./TrackInfo": "./src/components/radar.tsx" },
+			exposes: {},
 			shared: {
 				...deps,
 				react: {

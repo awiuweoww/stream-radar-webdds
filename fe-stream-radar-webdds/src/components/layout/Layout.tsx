@@ -17,6 +17,13 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
+/**
+ * Komponen Layout utama yang membungkus seluruh halaman aplikasi.
+ * 
+ * @param props - Properti komponen yang berisi elemen children.
+ * @param "props.children" - Komponen-komponen anak yang akan ditampilkan di dalam layout. 
+ * @returns Elemen JSX Layout.
+ */
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-slate-50 font-montserrat flex flex-col">

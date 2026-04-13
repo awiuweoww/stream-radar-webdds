@@ -24,23 +24,19 @@ class RadarLogger {
     const arrivalTime = Date.now();
     this.stats.packetCount++;
     
-    // Estimasi ukuran data secara aman
     const byteSize = typeof data === 'string' ? data.length : JSON.stringify(data).length;
     this.stats.totalBytes += byteSize;
 
-    // Hitung Latency jika ada timestamp
     let avgLatency = 0;
     if (tracks.length > 0 && tracks[0].timestamp) {
       const sumLatency = tracks.reduce((acc, t) => acc + (arrivalTime - t.timestamp), 0);
       avgLatency = sumLatency / tracks.length;
     }
 
-    // Log Real-time ringan (Total Objects)
-    if (this.stats.packetCount % 5 === 0) { // Log setiap 5 paket agar tidak terlalu banjir
+    if (this.stats.packetCount % 5 === 0) { 
         console.debug(`[Radar Stream] Incoming: ${tracks.length} objects`);
     }
 
-    // Tampilkan log performa setiap 5 detik
     const now = performance.now();
     if (now - this.stats.lastLogTime > 5000) {
       this.printPerformanceSummary(avgLatency, now, tracks.length);
@@ -71,6 +67,9 @@ class RadarLogger {
 
   /**
    * Mencetak ringkasan statistik ke konsol.
+   * @param avgLatency - Rata-rata latency dari paket yang diterima\
+   * @param now - Timestamp saat ini untuk hitung durasi
+   * @param lastTrackCount - Jumlah lintasan kapal pada paket terakhir
    */
   private printPerformanceSummary(avgLatency: number, now: number, lastTrackCount: number): void {
     const durationSec = (now - this.stats.lastLogTime) / 1000;
@@ -85,8 +84,11 @@ class RadarLogger {
     console.groupEnd();
   }
 
+
   /**
-   * Mereset counter statistik.
+   * Resets the performance statistics.
+   * This function should be called when printing the performance summary.
+   * @param now - The current timestamp.
    */
   private resetStats(now: number): void {
     this.stats.packetCount = 0;

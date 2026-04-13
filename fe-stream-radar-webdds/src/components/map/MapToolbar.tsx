@@ -20,6 +20,17 @@ export interface MapToolbarProps {
   mapType: 'standard' | 'satellite';
 }
 
+/**
+ * Komponen Toolbar untuk mengontrol interaksi peta seperti zoom dan tipe peta.
+ * 
+ * @param props - Properti untuk menangani aksi kontrol peta.
+ * @param "props.onCenter" - Fungsi untuk mengatur tampilan peta ke titik tengah.
+ * @param "props.onZoomIn" - Fungsi untuk mengatur tampilan peta ke titik tengah.
+ * @param "props.onZoomOut" - Fungsi untuk mengatur tampilan peta ke titik tengah.
+ * @param "props.onToggleMapType" - Fungsi untuk mengatur tampilan peta ke titik tengah.
+ * @param "props.mapType" - Tipe peta yang sedang digunakan.
+ * @returns Elemen JSX Toolbar kontrol peta.
+ */
 export const MapToolbar: React.FC<MapToolbarProps> = ({ 
   onCenter, 
   onZoomIn, 

@@ -100,9 +100,35 @@ docker-compose up --build
 
 ---
 
-## 🛣️ Roadmap Pengembangan
-- [x] Migrasi dari JSON ke Binary Streaming (41-bytes v3.1).
-- [x] Implementasi Smart Auto-Reconnect di Frontend.
-- [x] Penambahan QoS Best Effort & History Middleware.
+## ⚡ Cara Menjalankan (Development)
+
+Terdapat dua cara untuk menjalankan sistem ini:
+
+### A. Menggunakan Docker (Rekomendasi)
+Ini adalah cara paling cepat dan stabil:
+```bash
+docker-compose up --build
+```
+
+### B. Menjalankan Lokal (Non-Docker)
+Cocok untuk debugging cepat tanpa perlu rebuild kontainer.
+
+1.  **Gateway Bridge**:
+    ```bash
+    cd gateway-bridge && npm install && node server.js
+    ```
+2.  **Frontend**:
+    ```bash
+    cd fe-stream-radar-webdds && pnpm install && pnpm dev
+    ```
+3.  **C++ Engine**:
+    *Pastikan sudah terinstal g++ (MinGW di Windows atau GCC di Linux/Mac).*
+    ```bash
+    cd be-stream-radar-cpp
+    g++ -o RadarPublisher src/Publisher.cpp -O3
+    ./RadarPublisher
+    ```
+
+
 
 ---

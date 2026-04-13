@@ -12,6 +12,11 @@
 import React from 'react';
 import { useSimulationStore } from '../../store/useSimulationStore';
 
+/**
+ * Komponen untuk menampilkan statistik performa radar seperti FPS dan Jumlah Objek.
+ * 
+ * @returns Elemen JSX menampilkan statistik performa radar.
+ */
 export const PerformanceStats: React.FC = () => {
   const { fps, totalObjects } = useSimulationStore();
 

@@ -31,7 +31,7 @@ services:
       - "3000:3000"
     volumes:
       - ./fe-stream-radar-webdds:/app_build
-      - /app_build/node_modules # Lindungi node_modules kontainer agar tidak tertimpa lokal
+      - /app_build/node_modules 
     environment:
       - CACHE_BREAKER=2
       - VITE_WEBDDS_URL=ws://localhost:8080/webdds

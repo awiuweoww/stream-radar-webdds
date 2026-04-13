@@ -16,6 +16,12 @@ import { MapToolbar } from './MapToolbar';
 import { RadarSweep } from './RadarSweep';
 import { useRadarEngine } from '../../hooks/useRadarEngine';
 
+/**
+ * Komponen Peta Radar utama yang mengintegrasikan OpenLayers.
+ * Menampilkan posisi target, efek sapuan radar, dan kontrol peta.
+ * 
+ * @returns Elemen JSX kontainer peta radar.
+ */
 export const RadarMap: React.FC = () => {
   const {
     mapElement,
@@ -31,21 +37,15 @@ export const RadarMap: React.FC = () => {
 
   return (
     <div className="relative w-full h-[65vh] min-h-[600px] bg-surface-900 rounded shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-surface-100 overflow-hidden">
-      
-      {/* Background Grid Pattern (CSS) */}
       <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" 
            style={{ backgroundImage: 'linear-gradient(#00d8ff 1px, transparent 1px), linear-gradient(90deg, #00d8ff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
-      {/* OpenLayers Popup Element */}
       <TrackTooltip ref={overlayElement} data={popupData} />
 
-      {/* Radar Sweep Effect Element */}
       <RadarSweep ref={sweepElement} />
 
-      {/* OpenLayers Map Container */}
       <div ref={mapElement} className="absolute inset-0 z-10" />
 
-      {/* Map Controls Toolbar (Right Corner) */}
       <MapToolbar 
         onCenter={handleCenter}
         onZoomIn={handleZoomIn}
@@ -54,7 +54,6 @@ export const RadarMap: React.FC = () => {
         mapType={mapType}
       />
 
-      {/* Legend Override Overlay */}
       <div className="absolute top-6 left-6 z-20 font-bold uppercase tracking-widest text-[10px] space-y-2 pointer-events-none bg-white/80 backdrop-blur py-2 px-3 rounded shadow-sm">
          <div className="flex items-center gap-2">
              <div className="w-2.5 h-2.5 bg-success" />

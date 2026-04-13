@@ -1,9 +1,8 @@
 /**
  * Created Date       : 11-04-2026
- * Description        : Hook Infrastruktur Peta (OpenLayers Framework Layer).
+ * Description        : Hook untuk mengelola instance peta OpenLayers.
  *                      Bertanggung jawab atas instansiasi objek Map, manajemen resolusi Viewport,
  *                      dan orkestrasi TileLayer (OSM/Satelit) serta VectorLayer statis (Cincin Radar).
- *                      Memastikan sinkronisasi atomik antara rasio per-piksel peta terhadap elemen overlay DOM.
  */
 import { useEffect, useRef, useState } from 'react';
 import Map from 'ol/Map';
@@ -22,6 +21,11 @@ import colors from '../utils/colors';
 
 export const CENTER_COORD = fromLonLat([110.5000, -5.5000]);
 
+/**
+ * Hook untuk menginisialisasi dan mengelola instance peta OpenLayers.
+ * 
+ * @returns Objek yang berisi referensi elemen peta, status, dan fungsi kontrol peta.
+ */
 export function useMapInstance() {
   const mapElement = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<Map | null>(null);
@@ -70,6 +74,9 @@ export function useMapInstance() {
     });
     initialMap.addOverlay(sweepOverlay);
 
+    /**
+     * Menyesuaikan ukuran elemen sapuan radar (sweep)
+     */
     const syncSweepSize = () => {
       if (sweepElement.current && initialMap) {
         const res = initialMap.getView().getResolution();
@@ -107,9 +114,28 @@ export function useMapInstance() {
     }
   }, [mapType]);
 
+  /**
+   * Memperbesar tampilan peta.
+   * @returns zoom in
+   */
   const handleZoomIn = () => mapInstanceRef.current?.getView().animate({ zoom: (mapInstanceRef.current?.getView().getZoom() || 0) + 1, duration: 250 });
+  
+  /**
+   * Memperkecil tampilan peta.
+   * @returns zoom out
+   */
   const handleZoomOut = () => mapInstanceRef.current?.getView().animate({ zoom: (mapInstanceRef.current?.getView().getZoom() || 0) - 1, duration: 250 });
+  
+  /**
+   * Mengembalikan tampilan peta ke titik tengah (pusat radar).
+   * @returns center
+   */
   const handleCenter = () => mapInstanceRef.current?.getView().animate({ center: CENTER_COORD, zoom: 9.5, duration: 500 });
+  
+  /**
+   * Beralih antara tipe peta standar (OSM) dan satelit.
+   * @returns toggle map type
+   */
   const toggleMapType = () => setMapType(prev => prev === 'standard' ? 'satellite' : 'standard');
 
   return {

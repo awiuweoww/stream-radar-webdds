@@ -11,6 +11,11 @@
  */
 import React from 'react';
 
+/**
+ * Komponen Footer yang menampilkan informasi hak cipta di bagian bawah halaman.
+ * 
+ * @returns Elemen JSX Footer.
+ */
 export const Footer: React.FC = () => {
   return (
     <footer className="flex items-center justify-between px-8 py-6 text-xs text-surface-400 uppercase tracking-wide border-t border-surface-200 mt-10">

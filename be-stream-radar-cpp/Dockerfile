@@ -1,4 +1,4 @@
-# Gunakan image GCC untuk build sekaligus jalan (agar GLIBC pasti cocok)
+# Gunakan image GCC untuk build sekaligus jalan 
 FROM gcc:latest
 
 WORKDIR /app
@@ -6,7 +6,7 @@ WORKDIR /app
 # Salin source code
 COPY src/Publisher.cpp .
 
-# Kompilasi langsung di tempat
+# Kompilasi
 RUN g++ -O3 -o RadarPublisher Publisher.cpp
 
 # Jalankan langsung
