@@ -12,26 +12,47 @@
 #include <netdb.h>
 
 #pragma pack(push, 1)
+/**
+ * @struct TrackData
+ * @brief Struktur data biner 41-byte untuk satu objek radar.
+ * Menggunakan pragma pack(1) untuk memastikan tidak ada padding memori.
+ */
 struct TrackData {
-    int32_t trackId;
-    double lat;
-    double lon;
-    float altitude; 
-    float speed;
-    float heading;
-    int64_t timestamp;
-    uint8_t classification; 
+    int32_t trackId;       /**< ID unik objek */
+    double lat;            /**< Lokasi Latitude */
+    double lon;            /**< Lokasi Longitude */
+    float altitude;        /**< Ketinggian (m) */
+    float speed;           /**< Kecepatan (knots) */
+    float heading;         /**< Arah (derajat) */
+    int64_t timestamp;     /**< Waktu UNIX (ms) */
+    uint8_t classification; /**< 1: Hostile, 0: Friend */
 };
 #pragma pack(pop)
 
+/** @var {int} sock - Socket file descriptor untuk koneksi ke Gateway */
 int sock = -1;
+/** @var {int} currentTargetCount - Jumlah objek yang sedang disimulasikan */
 int currentTargetCount = 100;
+/** @var {auto} startTime - Waktu awal simulasi dimulai */
 auto startTime = std::chrono::steady_clock::now();
 
+/**
+ * Generator angka acak sederhana berbasis seed.
+ * @param index - Index objek.
+ * @param seed - Nilai benih acak.
+ * @return Nilai double antara 0.0 - 1.0.
+ */
 double get_random(int index, double seed) {
     return fmod(std::abs(sin(index * 12.9898 + seed * 78.233)) * 43758.5453, 1.0);
 }
 
+/**
+ * Fungsi pembantu untuk memastikan seluruh buffer terkirim melalui socket.
+ * @param s - Socket descriptor.
+ * @param buf - Pointer ke buffer data.
+ * @param len - Panjang data yang akan dikirim.
+ * @return true jika berhasil terkirim semua.
+ */
 bool send_all(int s, const char* buf, int len) {
     int total = 0;
     int bytesleft = len;
@@ -45,6 +66,10 @@ bool send_all(int s, const char* buf, int len) {
     return total == len;
 }
 
+/**
+ * Menangani penerimaan perintah (JSON) dari Gateway secara non-blocking.
+ * Merupakan implementasi dari Subscriber CommandTopic.
+ */
 void handle_commands() {
     if (sock == -1) return;
     char buffer[1024] = {0};
@@ -61,6 +86,9 @@ void handle_commands() {
     }
 }
 
+/**
+ * Membangun koneksi TCP ke Gateway (Service: radar-gateway).
+ */
 void connect_to_gateway() {
     struct addrinfo hints, *res;
     memset(&hints, 0, sizeof(hints));
@@ -76,6 +104,10 @@ void connect_to_gateway() {
     fcntl(sock, F_SETFL, O_NONBLOCK);
 }
 
+/**
+ * Titik masuk utama simulasi radar.
+ * Melakukan perulangan produksi data biner dan pengiriman via socket.
+ */
 int main() {
     std::cout << "📡 [Backend] Radar engine v4.0 (Warfare Speed) is active" << std::endl;
     while (true) {
@@ -89,22 +121,21 @@ int main() {
 
         std::vector<TrackData> tracks;
         for (int i = 0; i < currentTargetCount; i++) {
-            // SEBARAN LUAS: Muncul acak di radius 100km tanpa pola lingkaran
+            // SEBARAN LUAS: Area Laut Jawa
             double startLat = -5.5 + (get_random(i, 1.1) - 0.5) * 1.5;
             double startLon = 110.5 + (get_random(i, 2.2) - 0.5) * 1.5;
             
             // ARAH DAN KECEPATAN (100 - 500 KNOTS)
             double knots = 100.0 + (get_random(i, 5.5) * 400.0);
-            double headingRad = get_random(i, 3.3) * 6.28318; // Arah acak 0-360 derajat
+            double headingRad = get_random(i, 3.3) * 6.28318; 
             
-            // Konversi Knots ke pergerakan visual (Skala dipercepat)
             double velocityFactor = knots * 0.0000035; 
             
             TrackData t;
             t.trackId = i;
             t.lat = startLat + (sin(headingRad) * timeSec * velocityFactor);
             t.lon = startLon + (cos(headingRad) * timeSec * velocityFactor);
-            t.altitude = (float)(get_random(i, 7.7) * 2000.0); // Variasi altitude (0-2000m)
+            t.altitude = (float)(get_random(i, 7.7) * 2000.0);
             t.speed = (float)knots;
             t.heading = (float)(fmod(headingRad * 57.29, 360.0));
             t.timestamp = timestampMs;
@@ -113,6 +144,7 @@ int main() {
         }
 
         if (sock != -1 && !tracks.empty()) {
+            // [Publish: RadarTrackTopic]
             uint32_t totalSize = tracks.size() * sizeof(TrackData);
             send(sock, &totalSize, 4, 0);
             send_all(sock, (const char*)tracks.data(), totalSize);
